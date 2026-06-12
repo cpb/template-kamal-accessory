@@ -1,0 +1,20 @@
+_min_copier_version: "9"
+
+service_name:
+  type: str
+  help: Short service name — Kamal service id, Docker image name, GitHub repo name.
+
+subdomain:
+  type: str
+  help: Subdomain under cpb.ca.
+  default: "{{ service_name }}"
+
+app_port:
+  type: int
+  help: Port the container listens on.
+  default: 8080
+
+data_volume:
+  type: bool
+  help: Mount a persistent volume at /data/<service_name>?
+  default: false

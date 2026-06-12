@@ -1,0 +1,29 @@
+service: my-service   # TODO: rename
+
+image: ghcr.io/cpb/my-service   # TODO: rename
+
+servers:
+  web:
+    - <%= ENV["DEPLOY_HOST"] %>
+
+ssh:
+  proxy_command: >-
+    cloudflared access ssh --hostname ssh.cpb.ca
+    --service-token-id $CF_ACCESS_CLIENT_ID
+    --service-token-secret $CF_ACCESS_CLIENT_SECRET
+
+registry:
+  server: ghcr.io
+  username: cpb
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  secret: []   # TODO: add app-specific secrets
+
+# volumes:
+#   - /data/my-service:/data   # TODO: add if persistent storage needed
+
+proxy:
+  host: my-service.cpb.ca   # TODO: rename
+  app_port: 8080             # TODO: set correct port

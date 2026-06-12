@@ -1,0 +1,30 @@
+service: {{ service_name }}
+
+image: ghcr.io/cpb/{{ service_name }}
+
+servers:
+  web:
+    - <%= ENV["DEPLOY_HOST"] %>
+
+ssh:
+  proxy_command: >-
+    cloudflared access ssh --hostname ssh.cpb.ca
+    --service-token-id $CF_ACCESS_CLIENT_ID
+    --service-token-secret $CF_ACCESS_CLIENT_SECRET
+
+registry:
+  server: ghcr.io
+  username: cpb
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  secret: []   # TODO: add app-specific secrets
+{% if data_volume %}
+
+volumes:
+  - /data/{{ service_name }}:/data
+{% endif %}
+proxy:
+  host: {{ subdomain }}.cpb.ca
+  app_port: {{ app_port }}
